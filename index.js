@@ -1,6 +1,6 @@
 const { Command } = require("commander");
 const program = new Command();
-const db = require("./db/contacts");
+const db = require("./contacts");
 
 program
   .option("-a, --action <type>", "choose action")
@@ -18,22 +18,21 @@ async function invokeAction({ action, id, name, email, phone }) {
   switch (action) {
     case "list":
       const contacts = await db.listContacts();
-      console.table([...contacts]);
+      console.table(contacts);
       break;
 
     case "get":
       const getID = await db.getContactById(id);
-      console.table([...getID]);
+      console.table(getID);
       break;
 
     case "add":
       const add = await db.addContact(name, email, phone);
-      console.table([...add]);
+      console.table(add);
       break;
 
     case "remove":
-      const remove = await db.removeContact(id);
-      console.table([...remove]);
+      await db.removeContact(id);
       break;
 
     default:

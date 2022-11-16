@@ -2,7 +2,7 @@ const fs = require("fs/promises");
 const { v4: uuidv4 } = require("uuid");
 const path = require("path");
 
-const contactsPath = path.join(__dirname, "/contacts.json");
+const contactsPath = path.join(__dirname, "db/contacts.json");
 
 async function listContacts() {
   const dbRaw = await fs.readFile(contactsPath);
@@ -13,15 +13,20 @@ async function listContacts() {
 async function getContactById(contactId) {
   const dbRaw = await fs.readFile(contactsPath);
   const db = JSON.parse(dbRaw);
-  const getId = db.filter(({ id }) => id === contactId);
+  const getId = db.find(({ id }) => id === contactId);
   return getId;
 }
 
 async function removeContact(contactId) {
   const dbRaw = await fs.readFile(contactsPath);
   const db = JSON.parse(dbRaw);
-  const removeFilter = db.filter(({ id }) => id !== contactId);
-  return removeFilter;
+  const index = db.findIndex((el) => el.id === contactId);
+  if (index === -1) {
+    return null;
+  }
+  db.splice(index, 1);
+  await fs.writeFile(contactsPath, JSON.stringify(db));
+  console.log(`id ${contactId} has been deleted`);
 }
 
 async function addContact(name, email, phone) {
@@ -35,7 +40,7 @@ async function addContact(name, email, phone) {
   };
   db.push(newContact);
   await fs.writeFile(contactsPath, JSON.stringify(db));
-  return db;
+  console.log(`${JSON.stringify(newContact)}, was successfully added`);
 }
 
 module.exports = {
