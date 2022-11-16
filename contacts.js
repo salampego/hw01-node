@@ -40,7 +40,8 @@ async function addContact(name, email, phone) {
   };
   db.push(newContact);
   await fs.writeFile(contactsPath, JSON.stringify(db));
-  console.log(`${JSON.stringify(newContact)}, was successfully added`);
+  console.table(newContact);
+  console.log(`New contact was successfully added`);
 }
 
 module.exports = {
