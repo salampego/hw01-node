@@ -20,13 +20,16 @@ async function getContactById(contactId) {
 async function removeContact(contactId) {
   const dbRaw = await fs.readFile(contactsPath);
   const db = JSON.parse(dbRaw);
-  const index = db.findIndex((el) => el.id === contactId);
+  const index = db.findIndex((el) => {
+    return el.id === contactId;
+  });
   if (index === -1) {
     return null;
   }
+  const removeContact = db[index];
   db.splice(index, 1);
   await fs.writeFile(contactsPath, JSON.stringify(db));
-  return db;
+  return removeContact;
 }
 
 async function addContact(name, email, phone) {
