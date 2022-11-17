@@ -26,7 +26,7 @@ async function removeContact(contactId) {
   }
   db.splice(index, 1);
   await fs.writeFile(contactsPath, JSON.stringify(db));
-  console.log(`id ${contactId} has been deleted`);
+  return db;
 }
 
 async function addContact(name, email, phone) {
@@ -40,8 +40,7 @@ async function addContact(name, email, phone) {
   };
   db.push(newContact);
   await fs.writeFile(contactsPath, JSON.stringify(db));
-  console.table(newContact);
-  console.log(`New contact was successfully added`);
+  return newContact;
 }
 
 module.exports = {
